@@ -72,9 +72,17 @@ export default function Schools() {
     if (!window.confirm(confirmMsg)) return;
 
     try {
-      await api.patch(`/schools/${id}/status`, { status: newStatus });
+      const response = await api.patch(`/schools/${id}/status`, { status: newStatus });
       // Update local state to avoid a full page re-fetch
       setSchools(schools.map(s => s._id === id ? { ...s, status: newStatus } : s));
+
+      // ✅ If the school was just activated, pop up the Admin ID!
+      if (newStatus === 'ACTIVE' && response.data?.data?.adminDetails) {
+        const { adminID, email, name } = response.data.data.adminDetails;
+        alert(`✅ School Activated Successfully!\n\nPrincipal: ${name}\nLogin ID: ${adminID}\nEmail: ${email}\n\n(Note: Password is known only to the user)`);
+      } else {
+        alert(`School status updated to ${newStatus}`);
+      }
     } catch (err) {
       console.error('Error updating status:', err);
       alert('Failed to update school status.');
