@@ -1,0 +1,38 @@
+SUPER ADMIN FRONTEND - EXECUTION PLAN
+=====================================
+
+OVERVIEW
+--------
+This plan breaks down the development of the React + Vite Super Admin Dashboard into 4 actionable phases, matching the backend architecture.
+
+PHASE 1: AUTHENTICATION & ROUTING (Foundation)
+----------------------------------------------
+- Setup `react-router-dom` for application routing.
+- Build `src/api/axios.js` to handle API requests to `http://localhost:5000/api/superadmin` and inject the `superAdminToken`.
+- Create `src/components/ProtectedRoute.jsx` to guard inner pages.
+- Build `src/pages/Login.jsx` with email/password authentication.
+- Create the master `Layout.jsx` (Sidebar & Header) for authenticated users.
+
+PHASE 2: GLOBAL DASHBOARD
+-------------------------
+- Build `src/pages/Dashboard.jsx`.
+- Fetch and display high-level KPIs: Total Schools, MRR, Active Students, Storage used.
+- Render a "Recently Added Schools" mini-table.
+
+PHASE 3: TENANT (SCHOOL) MANAGEMENT
+-----------------------------------
+- Build `src/pages/Schools.jsx`.
+- Implement a powerful data table listing all tenants.
+- Build the "Add New School" modal to provision new tenants.
+- Implement the Toggle Switch to Suspend/Activate a school.
+- Implement the "Tenant Impersonation" feature (fetching a magic token and opening the tenant frontend in a new tab).
+
+PHASE 4: SUBSCRIPTION & PLAN MANAGEMENT
+---------------------------------------
+- Build `src/pages/Plans.jsx`.
+- Display pricing tiers in a grid.
+- Build the "Create/Edit Plan" modal (setting limits: maxStudents, maxStorageMB, features array).
+- Add the dynamic dropdown inside the `Schools.jsx` table to assign or change a school's plan on the fly.
+
+STATE MANAGEMENT
+- We will rely on React State (`useState`, `useEffect`) and standard Axios calls for simplicity and speed.
