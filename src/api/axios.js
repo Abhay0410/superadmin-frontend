@@ -1,6 +1,17 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
+function getBaseURL() {
+  // RUNTIME CHECK: If on Vercel, use relative path so vercel.json proxy catches it!
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return ""; 
+  }
+  
+  let url = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
+  if (url.endsWith('/')) url = url.slice(0, -1);
+  return url;
+}
+
+const API_BASE_URL = getBaseURL();
 const TOKEN_KEY = import.meta.env.VITE_REACT_APP_AUTH_TOKEN_KEY || 'superAdminToken';
 
 // Create an axios instance specifically for the superadmin namespace
