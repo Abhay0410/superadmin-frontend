@@ -2,8 +2,11 @@ import { useState, useEffect } from 'react';
 import api from '../api/axios';
 
 // Get the school frontend base URL from environment variables
-// Fallback to localhost for local development
-const SCHOOL_FRONTEND_BASE_URL = import.meta.env.VITE_REACT_APP_SCHOOL_FRONTEND_BASE_URL || 'http://localhost:5173';
+// Fallback to known production URL if on Vercel, else localhost
+const SCHOOL_FRONTEND_BASE_URL = import.meta.env.VITE_REACT_APP_SCHOOL_FRONTEND_BASE_URL || 
+  (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
+    ? 'https://sms-frontend-eta-gray.vercel.app' 
+    : 'http://localhost:5173');
 
 export default function Schools() {
   const [schools, setSchools] = useState([]);
