@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
 
+// Get the school frontend base URL from environment variables
+// Fallback to localhost for local development
+const SCHOOL_FRONTEND_BASE_URL = import.meta.env.VITE_REACT_APP_SCHOOL_FRONTEND_BASE_URL || 'http://localhost:5173';
+
 export default function Schools() {
   const [schools, setSchools] = useState([]);
   const [plans, setPlans] = useState([]);
@@ -123,7 +127,7 @@ export default function Schools() {
       }
 
       // 2. Redirect the newly opened window to the tenant app!
-      impersonateWindow.location.href = `http://localhost:5173/auto-login?token=${token}`;
+      impersonateWindow.location.href = `${SCHOOL_FRONTEND_BASE_URL}/auto-login?token=${token}`;
       
     } catch (err) {
       console.error('Error impersonating:', err);
