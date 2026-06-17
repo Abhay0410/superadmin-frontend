@@ -1,14 +1,18 @@
 import axios from 'axios';
 
 function getBaseURL() {
+  let envUrl = import.meta.env.VITE_REACT_APP_API_BASE_URL || import.meta.env.VITE_API_BASE_URL;
+  if (envUrl) {
+    if (envUrl.endsWith('/')) envUrl = envUrl.slice(0, -1);
+    return envUrl;
+  }
+
   // RUNTIME CHECK: If on Vercel, use relative path so vercel.json proxy catches it!
   if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
     return ""; 
   }
   
-  let url = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
-  if (url.endsWith('/')) url = url.slice(0, -1);
-  return url;
+  return 'http://localhost:5000';
 }
 
 const API_BASE_URL = getBaseURL();
