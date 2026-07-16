@@ -15,6 +15,7 @@ export default function Plans() {
     monthlyPrice: '',
     yearlyPrice: '',
     maxStudents: '',
+    maxStaff: '',
     maxStorageMB: '',
     features: '', // We'll handle this as a comma-separated string in the form
   });
@@ -45,16 +46,17 @@ export default function Plans() {
     if (plan) {
       setEditingId(plan._id);
       setFormData({
-        name: plan.name,
+        name: plan.name || '',
         monthlyPrice: plan.monthlyPrice || '',
         yearlyPrice: plan.yearlyPrice || '',
-        maxStudents: plan.limits?.maxStudents || '',
-        maxStorageMB: plan.limits?.maxStorageMB || '',
+        maxStudents: plan.limits?.maxStudents !== undefined ? plan.limits.maxStudents : '',
+        maxStaff: plan.limits?.maxStaff !== undefined ? plan.limits.maxStaff : '',
+        maxStorageMB: plan.limits?.maxStorageMB !== undefined ? plan.limits.maxStorageMB : '',
         features: plan.features ? plan.features.join(', ') : '',
       });
     } else {
       setEditingId(null);
-      setFormData({ name: '', monthlyPrice: '', yearlyPrice: '', maxStudents: '', maxStorageMB: '', features: '' });
+      setFormData({ name: '', monthlyPrice: '', yearlyPrice: '', maxStudents: '', maxStaff: '', maxStorageMB: '', features: '' });
     }
     setIsModalOpen(true);
   };
@@ -69,6 +71,7 @@ export default function Plans() {
         yearlyPrice: Number(formData.yearlyPrice),
         limits: {
           maxStudents: Number(formData.maxStudents),
+          maxStaff: Number(formData.maxStaff),
           maxStorageMB: Number(formData.maxStorageMB),
         },
         // Convert comma-separated string to array, trimming whitespace
@@ -136,9 +139,9 @@ export default function Plans() {
                 </button>
               </div>
               <div className="mb-6">
-                <span className="text-4xl font-extrabold text-slate-900">${plan.monthlyPrice}</span>
+                <span className="text-4xl font-extrabold text-slate-900">₹{plan.monthlyPrice}</span>
                 <span className="text-slate-500 font-medium">/mo</span>
-                {plan.yearlyPrice && <div className="text-sm text-slate-500 mt-1">or ${plan.yearlyPrice}/year</div>}
+                {plan.yearlyPrice && <div className="text-sm text-slate-500 mt-1">or ₹{plan.yearlyPrice}/year</div>}
               </div>
               
               <div className="space-y-3">
@@ -146,11 +149,15 @@ export default function Plans() {
                 <ul className="text-sm text-slate-600 space-y-2">
                   <li className="flex items-center">
                     <span className="w-4 h-4 mr-2 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-[10px]">✓</span>
-                    Up to {plan.limits?.maxStudents?.toLocaleString() || 'Unlimited'} Students
+                    {plan.limits?.maxStudents === -1 ? 'Unlimited Students' : `Up to ${plan.limits?.maxStudents?.toLocaleString() || 0} Students`}
                   </li>
                   <li className="flex items-center">
                     <span className="w-4 h-4 mr-2 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-[10px]">✓</span>
-                    {plan.limits?.maxStorageMB ? `${(plan.limits.maxStorageMB / 1024).toFixed(1)} GB Storage` : 'Unlimited Storage'}
+                    {plan.limits?.maxStaff === -1 ? 'Unlimited Staff' : `Up to ${plan.limits?.maxStaff?.toLocaleString() || 0} Staff`}
+                  </li>
+                  <li className="flex items-center">
+                    <span className="w-4 h-4 mr-2 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-[10px]">✓</span>
+                    {plan.limits?.maxStorageMB === -1 ? 'Unlimited Storage' : (plan.limits?.maxStorageMB ? `${(plan.limits.maxStorageMB / 1024).toFixed(1)} GB Storage` : '0 GB Storage')}
                   </li>
                 </ul>
 
@@ -191,23 +198,27 @@ export default function Plans() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Monthly Price ($)</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Monthly Price (₹)</label>
                   <input type="number" name="monthlyPrice" required value={formData.monthlyPrice} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="0" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Yearly Price ($)</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Yearly Price (₹)</label>
                   <input type="number" name="yearlyPrice" value={formData.yearlyPrice} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="0" />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Max Students</label>
-                  <input type="number" name="maxStudents" required value={formData.maxStudents} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. 500" />
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Max Students</label>
+                  <input type="number" name="maxStudents" required value={formData.maxStudents} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm" placeholder="-1 for Unlim." />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Max Storage (MB)</label>
-                  <input type="number" name="maxStorageMB" required value={formData.maxStorageMB} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. 5120 for 5GB" />
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Max Staff</label>
+                  <input type="number" name="maxStaff" required value={formData.maxStaff} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm" placeholder="-1 for Unlim." />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Max Storage (MB)</label>
+                  <input type="number" name="maxStorageMB" required value={formData.maxStorageMB} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm" placeholder="-1 for Unlim." />
                 </div>
               </div>
 

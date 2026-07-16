@@ -72,7 +72,7 @@ export default function Dashboard() {
 
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
           <h3 className="text-sm font-medium text-slate-500">Platform MRR</h3>
-          <p className="text-3xl font-bold text-green-600 mt-2">${data.totalMRR}</p>
+          <p className="text-3xl font-bold text-green-600 mt-2">₹{data.totalMRR}</p>
           <p className="mt-2 text-sm text-slate-500">Monthly Recurring Revenue</p>
         </div>
 

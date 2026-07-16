@@ -195,13 +195,13 @@ export default function Schools() {
                   <td className="px-6 py-4">
                     <select
                       className="px-2 py-1 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                      value={school.subscription?.plan?._id || school.subscription?.plan || ''}
+                      value={school.subscription?._id || school.subscription || ''}
                       onChange={(e) => handleAssignPlan(school._id, e.target.value)}
                     >
                       <option value="" disabled>No Plan Assigned</option>
                       {plans.map((plan) => (
                         <option key={plan._id} value={plan._id}>
-                          {plan.name} (${plan.monthlyPrice})
+                          {plan.name} (₹{plan.monthlyPrice})
                         </option>
                       ))}
                     </select>
